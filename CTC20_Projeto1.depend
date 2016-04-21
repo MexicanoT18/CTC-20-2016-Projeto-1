@@ -1,0 +1,50 @@
+# depslib dependency file v1.0
+1461171914 source:c:\users\dv7\documents\ctc-20\ctc20_projeto1\main.cpp
+	<iostream>
+	<cstdio>
+	<vector>
+	"Element.h"
+	"Group.h"
+	"HasseDiagram.h"
+
+1461096112 c:\users\dv7\documents\ctc-20\ctc20_projeto1\include\element.h
+	"Table.h"
+
+1461002907 c:\users\dv7\documents\ctc-20\ctc20_projeto1\include\table.h
+	<map>
+	<vector>
+
+1461118751 c:\users\dv7\documents\ctc-20\ctc20_projeto1\include\group.h
+	<vector>
+	<list>
+	<stack>
+	<string>
+	"Element.h"
+	"Table.h"
+
+1461096112 source:c:\users\dv7\documents\ctc-20\ctc20_projeto1\src\element.cpp
+	"Element.h"
+	<cstdio>
+
+1461121548 source:c:\users\dv7\documents\ctc-20\ctc20_projeto1\src\group.cpp
+	"Group.h"
+	<algorithm>
+	<cstring>
+	<cstdio>
+
+1461096112 source:c:\users\dv7\documents\ctc-20\ctc20_projeto1\src\table.cpp
+	"Table.h"
+	<cstring>
+	<cstdlib>
+	<cstdio>
+
+1461171538 source:c:\users\dv7\documents\ctc-20\ctc20_projeto1\src\hassediagram.cpp
+	"HasseDiagram.h"
+	<algorithm>
+	<cstdio>
+
+1461248998 c:\users\dv7\documents\ctc-20\ctc20_projeto1\include\hassediagram.h
+	<list>
+	<vector>
+	"Group.h"
+
