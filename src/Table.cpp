@@ -2,20 +2,34 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
-#define MAXN 100009
+#define MAXN 1009
 
 using namespace std;
+
+/* Função Table
+ * Construtor da classe Table.
+ */
 
 Table::Table()
 {
     //ctor
 }
 
+/* Função addElement
+ * Adiciona um elemento ao mapa de operações.
+ */
+
 bool Table::addElement(char key1, char key2, char t)
 {
     table[key1][key2] = t;
     return true;
 }
+
+/* Função lookUp
+ * Retorna o caractere equivalente à operação a*b.
+ * Retorna o caractere de fim de string caso a ou b não
+ * sejam válidos os não estejam na tabela.
+ */
 
 char Table::lookUp(char a, char b)
 {
@@ -24,6 +38,11 @@ char Table::lookUp(char a, char b)
     }
     return table[a][b];
 }
+
+/* Função readFile
+ * Lê a tabela descrita pelo diretório path.
+ * Constrói o mapa de operações e o vetor de elementos.
+ */
 
 bool Table::readFile(const char *path)
 {
@@ -64,10 +83,18 @@ bool Table::readFile(const char *path)
 	return true;
 }
 
+/* Função isInTable
+ * Verifica se um elemento está na tabela por meio do mapa de operações.
+ */
+
 bool Table::isInTable(char c)
 {
     return table.count(c);
 }
+
+/* Função ~Table
+ * Destrutor da classe Table.
+ */
 
 Table::~Table()
 {

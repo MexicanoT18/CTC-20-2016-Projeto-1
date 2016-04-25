@@ -4,18 +4,32 @@
 
 using namespace std;
 
+/* Função HasseDiagram
+ * Construtor da classe HasseDiagram.
+ * Recebe uma lista ligada com todos os grupos e adiciona todos em um vetor.
+ */
+
 HasseDiagram::HasseDiagram(list<Group> & g)
 {
     list<Group>::iterator it;
     for(it = g.begin(); it != g.end(); it++){
         groups.push_back(*it);
     }
-
-    sort(groups.begin(), groups.end());
 }
+
+/* Função buildDiagram
+ * Constrói o diagrama de Hasse montando o grafo.
+ * Executa a ordenação topológica (sort baseado no número de elementos).
+ * Define os nívis do diagrama a partir das relações de pertence.
+ * Define os graus de cada vértice.
+ * A partir do grau, dos níveis e das relações, define quais relações vão
+ * ser incluídas como arestas no diagrama de Hasse.
+ */
 
 bool HasseDiagram::buildDiagram()
 {
+    sort(groups.begin(), groups.end());
+
     levels.resize(groups.size());
     levels.assign(groups.size(), 0);
     for(int i = 0; i < (int)groups.size(); i++){
@@ -46,6 +60,11 @@ bool HasseDiagram::buildDiagram()
     return true;
 }
 
+/* Função writeFile
+ * Escreve o grafo em um arquivo no formato para ser lido pelo GraphViz.
+ * A partir das arestas, esvrece o arquivo.
+ */
+
 bool HasseDiagram::writeFile(char * name)
 {
     FILE * out = fopen(name, "w");
@@ -61,6 +80,10 @@ bool HasseDiagram::writeFile(char * name)
     fclose(out);
     return true;
 }
+
+/* Função ~HasseDiagram
+ * Destrutor da classe HasseDiagram.
+ */
 
 HasseDiagram::~HasseDiagram()
 {

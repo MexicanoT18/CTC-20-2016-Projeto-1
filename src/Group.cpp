@@ -5,6 +5,13 @@
 
 using namespace std;
 
+/* Função Group
+ * Construtor da classe Group.
+ * Constrói a partir de um vetor de elementos.
+ * Ordena o vetor de elementos.
+ * Define o elemento neutro.
+ */
+
 Group::Group(const vector<Element> &arr)
 {
     elements = arr;
@@ -14,6 +21,13 @@ Group::Group(const vector<Element> &arr)
 
     neutralElementIndex = findNeutralElementIndex();
 }
+
+/* Função Group
+ * Construtor da classe Group.
+ * Constrói a partir de um vetor de caracteres e do ponteiro para a tabela.
+ * Ordena o vetor de elementos.
+ * Define o elemento neutro.
+ */
 
 Group::Group(const vector<char> &arr, Table * t)
 {
@@ -27,6 +41,11 @@ Group::Group(const vector<char> &arr, Table * t)
     neutralElementIndex = findNeutralElementIndex();
 }
 
+/* Função belongTo
+ * Verifica se o grupo pertence a um outro fazendo a busca de caracteres
+ * desete grupo no próximo.
+ */
+
 bool Group::belongsTo(Group & other){
     int otherIndex;
     for(int i=0; i<(int)elements.size(); i++){
@@ -36,9 +55,18 @@ bool Group::belongsTo(Group & other){
     return true;
 }
 
+/* Função isValidIndex
+ * Verifica se o número n representa uma posição válida no vetor de elementos.
+ */
+
 bool Group::isValidIndex(int n){
     return n >= 0 && n < (int)elements.size();
 }
+
+/* Função neutralElement
+ * Retorna o elemento neutro do grupo.
+ * Caso não haja elemento neutro, retorna um elemento inválido com o caractere '\0'.
+ */
 
 Element Group::neutralElement()
 {
@@ -47,6 +75,11 @@ Element Group::neutralElement()
     }
     else return Element(NULL, '\0');
 }
+
+/* Função verifyAssociativity
+ * Verifica se vale a propriedade da associatividade neste grupo para todas as possibilidades.
+ * Três loops para fazer a verificação.
+ */
 
 bool Group::verifyAssociativity()
 {
@@ -63,6 +96,13 @@ bool Group::verifyAssociativity()
 	return true;
 }
 
+/* Função isNeutralElement
+ * Verifica se o elemento de índice n é o elemento neutro.
+ * Faz todos os testes de operações para verificar as propriedades do elemento neutro.
+ * Poderia verificar se o elemento representa o caractere '1', mas
+ * foi feito um grupo para todos os modelos de tabela.
+ */
+
 bool Group::isNeutralElement(int n)
 {
     if (!isValidIndex(n)) return false;
@@ -73,11 +113,23 @@ bool Group::isNeutralElement(int n)
 	return true;
 }
 
+/* Função isNeutralElement
+ * Verifica se o elemento parametrado é o elemento neutro.
+ * Procura o índice do elemento no vetor e verifica se o índice é o do elemento neutro.
+ * Poderia verificar se o elemento representa o caractere '1', mas
+ * foi feito um grupo para todos os modelos de tabela.
+ */
+
 bool Group::isNeutralElement(Element element)
 {
     int elementIndex = findIndexOf(element.carac);
 	return isNeutralElement(elementIndex);
 }
+
+/* Função inverse
+ * Verifica se o grupo satisfaz a propriedade do elemento inverso.
+ * Procura o elemento inverso de cada elemento e o inverso deste e compara os dois.
+ */
 
 bool Group::inverse()
 {
@@ -93,6 +145,11 @@ bool Group::inverse()
 	return true;
 }
 
+/* Função isClosed
+ * Verifica se a operação é fechada para o grupo.
+ * Executa todas as possibilidades de operação e procura o elemento resultante no grupo.
+ */
+
 bool Group::isClosed()
 {
     int sumIndex;
@@ -105,13 +162,27 @@ bool Group::isClosed()
 	return true;
 }
 
+/* Função findNeutralElementIndex
+ * Procura pelo elemento neutro do grupo.
+ * Testa a propriedade do elemento neutro para todos os elementos.
+ * Poderia simplesmente procurar pelo elemento com o caractere '1',
+ * mas foi feito um grupo para tipo genérico de elemento neutro.
+ * Retorna -1 caso não ache.
+ */
+
 int Group::findNeutralElementIndex()
 {
 	for (int i = 0; i < (int)elements.size(); i++) {
 		if (isNeutralElement(i)) return i;
 	}
-	return -1; //Não existe elemento neutro
+	return -1;
 }
+
+/* Função inverseElementOf
+ * Procura pelo elemento inverso do que está no índice n.
+ * Procura por todos os elementos e faz o teste de inversibilidade.
+ * Retorna -1 caso não ache.
+ */
 
 int Group::inverseElementOf(int n)
 {
@@ -122,13 +193,24 @@ int Group::inverseElementOf(int n)
 			return i;
 		}
 	}
-	return -1;//Elemento não encontrado
+	return -1;
 }
+
+/* Função isValidGroup
+ * Verifica se o grupo é válido.
+ * Verifica a propriedade da associatividade, do elemento neutro e do elemento inverso.
+ */
 
 bool Group::isValidGroup()
 {
     return isClosed() && inverse() && verifyAssociativity();
 }
+
+/* Função generateSubgroups
+ * Gera todos os subgrupos do grupo atual e retorna uma lista com eles.
+ * Inicializa os vetores de presença no backtrack e as pulhas auxiliares.
+ * Chama o backtrack.
+ */
 
 list<Group> Group::generateSubgroups()
 {
@@ -143,10 +225,31 @@ list<Group> Group::generateSubgroups()
     for(int i=0; i<(int)elements.size(); i++) isPresent[i]=0;
     isPresent[neutralElementIndex]=1;
 
+    dfsVec = new stack<int>[(int)elements.size()];
+    toRemoveVec = new stack<int>[(int)elements.size()];
+
     backTrack(ans, 0);
 
     return ans;
 }
+
+/* Função clearStack
+ * Esvazia uma pilha recebendo uma referência pra ela.
+ */
+
+bool Group::clearStack(stack<int> & stck){
+    while(!stck.empty()) stck.pop();
+    return true;
+}
+
+/* Função backTrack
+ * Executa o algoritmo de backTrack para o n-ésimo elemento.
+ * Caso n seja o final, monta o grupo, verifica a validade dele e adiciona na lista.
+ * Caso ele já tenha sido marcado como presente ou ausente, prossegue.
+ * Supõe que o elemento não está e prossegue.
+ * Supõe que o elemento está e utiliza DFS para procurar pelos elementos que também deve estar
+ * segundo os elementos que já estão e segundo o que acabou de adicionado.
+ */
 
 void Group::backTrack(list<Group> & ans, int n)
 {
@@ -168,11 +271,12 @@ void Group::backTrack(list<Group> & ans, int n)
     isPresent[n]=-1;
     backTrack(ans, n+1);
 
-    stack<int> toRemove;
-    stack<int> dfs;
+    stack<int> & toRemove = toRemoveVec[n];
+    stack<int> & dfs = dfsVec[n];
+
     isPresent[n]=1;
-    toRemove.push(n);
-    dfs.push(n);
+    clearStack(toRemove); toRemove.push(n);
+    clearStack(dfs); dfs.push(n);
 
     int newToAdd, current;
     bool possible = true;
@@ -219,6 +323,11 @@ void Group::backTrack(list<Group> & ans, int n)
     }
 }
 
+/* Função findIndexOf
+ * Executa busca binária para achar o índice de um elemento no vetor de elementos.
+ * Caso não ache, retorna -1.
+ */
+
 int Group::findIndexOf(char c)
 {
     if (elements[0].carac > c) return -1;
@@ -237,6 +346,10 @@ int Group::findIndexOf(char c)
     else return -1;
 }
 
+/* Função toString
+ * Pega todos os elementos e concatena seus caracteres em uma string.
+ */
+
 string Group::toString(){
     string name;
     for(int i = 0; i < (int)elements.size(); i++){
@@ -244,6 +357,10 @@ string Group::toString(){
     }
     return name;
 }
+
+/* Função ~Group
+ * Destrutor da classe Group.
+ */
 
 Group::~Group()
 {
